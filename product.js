@@ -1,39 +1,14 @@
-const mongoose = require('mongoose');
-
-const productSchema = new mongoose.Schema({
-    categories: {
-        type : Array,
-        required : true,
-    },
-    subcategory : {
-        type : String,
-        required : true,
-    },
-    title: {
-        type: String,
-        required: true,
-       
-     },
-    desc: {
-        type: String,
-        required: true  
-    
-    },
-    image: {
-        type: String,
-        required: true,
-    },
-    
-   
-    color: {
-        type: String,
-        required: true,
-    },
-    price: {
-        type: Number,
-        required: true,
-    }
-}, { timestamps: true });
+const router = require("express").Router();
+const {addProduct, getProducts,productPrice,createOrder} = require("../controllers/productController.js");
 
 
-module.exports = mongoose.model("Product", productSchema);
+router.post("/add",addProduct);
+//router.get('/productByTitle', productByName);
+router.get('/productByCategory', getProducts);
+
+//sort the product by price
+router.get('/sortByPrice',productPrice);
+
+router.post('/payment',createOrder);
+
+module.exports = router;
