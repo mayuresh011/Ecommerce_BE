@@ -1,31 +1,24 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
-const PORT = 8000;
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
+const orderRoute = require("./routes.js")
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
 dotenv.config();
-const productRoutes = require('./routes/product.js');
-const price = require('../EcomProduct/routes/product.js')
-const payment = require('../EcomProduct/routes/product.js')
+mongoose
+    .connect(process.env.MONGO_URL)
+    .then(() => console.log("DBConnection is successful!"))
+    .catch((err) => {
+        console.log(err);
+    });
+app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
+
+//app.get("/get" , (req, res) =>{console.log("hi")})
+
+app.use('/api', orderRoute);
 
 
-app.use(express.json());
-app.use(express.urlencoded({extended : true}));
-
-
-
-mongoose.connect(process.env.MONGO_URL).then(()=>{
-    console.log("connected to database");
-}).catch((err)=>{
-    console.log(err);
-})
-//app.use('/admin/inventory',productRoutes);
-app.use('/user',productRoutes)
-app.use('/user/price',price);
-app.use('/user/payment',payment);
-
-
-
-app.listen(PORT,()=>{
-    console.log(`server started at ${PORT}`);
-})
+app.listen(process.env.PORT || 5000, () => {
+    console.log("Backend server is running!");
+});
